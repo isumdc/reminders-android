@@ -11,6 +11,11 @@ public class Reminder {
     private String description;
     private Date dueDate;
 
+    public Reminder()
+    {
+
+    }
+
     public String getName() {
         return name;
     }
@@ -33,11 +38,6 @@ public class Reminder {
 
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
-    }
-
-    public Reminder()
-    {
-
     }
 
 }
