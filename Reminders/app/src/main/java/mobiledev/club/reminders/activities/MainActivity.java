@@ -1,11 +1,10 @@
 package mobiledev.club.reminders.activities;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import mobiledev.club.reminders.R;
 
@@ -33,17 +32,20 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id){
+            case R.id.action_new_reminder:
+                Intent intent = new Intent(this, NewReminderActivity.class);
+                startActivity(intent);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    /*
     public void onNewReminderClick(View v)
     {
         Intent intent = new Intent(this, NewReminderActivity.class);
         startActivity(intent);
-    }
+    }*/
 }
