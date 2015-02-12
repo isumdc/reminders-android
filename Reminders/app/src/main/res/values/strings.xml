@@ -9,5 +9,7 @@
     <string name="description">Description</string>
     <string name="name">Name</string>
     <string name="action_new_reminder_title">New Reminder</string>
+    <string name="reminders_prefs_key">reminders_key</string>
+    <string name="title_activity_reminder">ReminderActivity</string>
 
 </resources>

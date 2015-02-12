@@ -1,11 +1,12 @@
 package mobiledev.club.reminders.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Ethan on 1/23/2015.
  */
-public class Reminder {
+public class Reminder implements Serializable{
 
     private String name;
     private String description;

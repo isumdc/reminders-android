@@ -2,7 +2,9 @@ package mobiledev.club.reminders.activities;
 
 
 import android.app.DatePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,10 +14,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import mobiledev.club.reminders.R;
@@ -32,10 +39,19 @@ public class NewReminderActivity extends ActionBarActivity {
     private Date dueDate;
     private DateFormat dateFormat;
 
+    private static ArrayList<Reminder> reminders;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_reminder);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        editor = sharedPreferences.edit();
+
+        loadReminders();
 
         final Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
@@ -49,8 +65,27 @@ public class NewReminderActivity extends ActionBarActivity {
 
     }
 
-    public void saveButtonOnClick(View view)
+    private void loadReminders()
     {
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(getString(R.string.reminders_prefs_key), "");
+        reminders = gson.fromJson(json, new TypeToken<List<Reminder>>(){}.getType());
+        if(reminders == null)
+        {
+            reminders = new ArrayList<Reminder>();
+        }
+//        Toast toast = Toast.makeText(this, reminders.size() + "", Toast.LENGTH_SHORT);
+//        toast.show();
+    }
+
+    private void saveReminders() {
+        Gson gson = new Gson();
+        String json = gson.toJson(reminders);
+        editor.putString(getString(R.string.reminders_prefs_key), json);
+        editor.commit();
+    }
+
+    public void saveButtonOnClick(View view) {
         /*
         Toast toast = Toast.makeText(NewReminderActivity.this, "Button Pressed", Toast.LENGTH_LONG);
         toast.show();*/
@@ -61,8 +96,7 @@ public class NewReminderActivity extends ActionBarActivity {
         EditText descriptionTextView = (EditText) findViewById(R.id.edittext_description);
         String description = descriptionTextView.getText().toString();
 
-        if(name.isEmpty() || description.isEmpty())
-        {
+        if (name.isEmpty() || description.isEmpty()) {
             Toast toast = Toast.makeText(this, "All fields must be filled out", Toast.LENGTH_SHORT);
             toast.show();
             return;
@@ -74,11 +108,14 @@ public class NewReminderActivity extends ActionBarActivity {
         newReminder.setDescription(description);
         newReminder.setDueDate(dueDate);
 
+        reminders.add(newReminder);
+
+        saveReminders();
+
         NewReminderActivity.this.finish();
     }
 
-    public void dateButtonOnClick(View view)
-    {
+    public void dateButtonOnClick(View view) {
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -91,8 +128,7 @@ public class NewReminderActivity extends ActionBarActivity {
         dialog.show();
     }
 
-    private void updateDateText()
-    {
+    private void updateDateText() {
         String dueDateString = dateFormat.format(dueDate);
         TextView dateTextView = (TextView) findViewById(R.id.textview_date);
         dateTextView.setText(datePrefix + dueDateString);
