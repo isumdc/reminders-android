@@ -41,7 +41,7 @@ public class ArrayAdapterNewReminder extends ArrayAdapter<Reminder> {
         TextView dateTextView = (TextView)row.findViewById(R.id.textview_date);
 
         Reminder reminder = (reminders.get(position));
-        nameTextView.setText(reminder.getName());
+        nameTextView.setText(reminder.getTitle());
 
         Date date = reminder.getDueDate();
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);

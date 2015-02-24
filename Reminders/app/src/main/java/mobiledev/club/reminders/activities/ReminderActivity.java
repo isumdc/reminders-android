@@ -27,11 +27,12 @@ public class ReminderActivity extends ActionBarActivity {
             return;
         }
 
+
         TextView nameTextView = (TextView) findViewById(R.id.textview_name);
         TextView descriptionTextView = (TextView) findViewById(R.id.textview_description);
         TextView dateTextView = (TextView) findViewById(R.id.textview_date);
 
-        nameTextView.setText(reminder.getName());
+        nameTextView.setText(reminder.getTitle());
         descriptionTextView.setText(reminder.getDescription());
 
         Date date = reminder.getDueDate();

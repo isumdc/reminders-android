@@ -1,9 +1,7 @@
 package mobiledev.club.reminders.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,15 +9,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import java.util.ArrayList;
-import java.util.List;
 
 import mobiledev.club.reminders.R;
 import mobiledev.club.reminders.adapters.ArrayAdapterNewReminder;
 import mobiledev.club.reminders.models.Reminder;
+import mobiledev.club.reminders.sqlite.RemindersDataSource;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -27,14 +22,12 @@ public class MainActivity extends ActionBarActivity {
     private static ArrayList<Reminder> reminders;
     private ListView listView;
     private static ArrayAdapterNewReminder adapter;
-    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         loadReminders();
 
         listView = (ListView)findViewById(R.id.list_view);
@@ -53,9 +46,9 @@ public class MainActivity extends ActionBarActivity {
 
     private void loadReminders()
     {
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString(getString(R.string.reminders_prefs_key), "");
-        reminders = gson.fromJson(json, new TypeToken<List<Reminder>>(){}.getType());
+        RemindersDataSource datasource = new RemindersDataSource(this);
+        datasource.open();
+        reminders = datasource.getReminders();
         if(reminders == null)
         {
             reminders = new ArrayList<Reminder>();

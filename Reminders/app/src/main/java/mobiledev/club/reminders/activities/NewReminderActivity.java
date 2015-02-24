@@ -2,9 +2,7 @@ package mobiledev.club.reminders.activities;
 
 
 import android.app.DatePickerDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,19 +12,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import mobiledev.club.reminders.R;
 import mobiledev.club.reminders.models.Reminder;
+import mobiledev.club.reminders.sqlite.RemindersDataSource;
 
 public class NewReminderActivity extends ActionBarActivity {
 
@@ -39,19 +33,10 @@ public class NewReminderActivity extends ActionBarActivity {
     private Date dueDate;
     private DateFormat dateFormat;
 
-    private static ArrayList<Reminder> reminders;
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_reminder);
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        editor = sharedPreferences.edit();
-
-        loadReminders();
 
         final Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
@@ -65,24 +50,12 @@ public class NewReminderActivity extends ActionBarActivity {
 
     }
 
-    private void loadReminders()
-    {
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString(getString(R.string.reminders_prefs_key), "");
-        reminders = gson.fromJson(json, new TypeToken<List<Reminder>>(){}.getType());
-        if(reminders == null)
-        {
-            reminders = new ArrayList<Reminder>();
-        }
-//        Toast toast = Toast.makeText(this, reminders.size() + "", Toast.LENGTH_SHORT);
-//        toast.show();
-    }
+    private void saveReminder(Reminder reminder) {
 
-    private void saveReminders() {
-        Gson gson = new Gson();
-        String json = gson.toJson(reminders);
-        editor.putString(getString(R.string.reminders_prefs_key), json);
-        editor.commit();
+        RemindersDataSource datasource = new RemindersDataSource(this);
+        datasource.open();
+        datasource.createReminder(reminder);
+        datasource.close();
     }
 
     public void saveButtonOnClick(View view) {
@@ -104,13 +77,13 @@ public class NewReminderActivity extends ActionBarActivity {
 
         Reminder newReminder = new Reminder();
 
-        newReminder.setName(name);
+        newReminder.setTitle(name);
         newReminder.setDescription(description);
         newReminder.setDueDate(dueDate);
 
-        reminders.add(newReminder);
+        //Save to database
 
-        saveReminders();
+        saveReminder(newReminder);
 
         NewReminderActivity.this.finish();
     }

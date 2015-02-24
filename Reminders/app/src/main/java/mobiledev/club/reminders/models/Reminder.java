@@ -8,7 +8,8 @@ import java.util.Date;
  */
 public class Reminder implements Serializable{
 
-    private String name;
+    private long id;
+    private String title;
     private String description;
     private Date dueDate;
 
@@ -17,12 +18,22 @@ public class Reminder implements Serializable{
 
     }
 
-    public String getName() {
-        return name;
+    public long getId()
+    {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setID(long id)
+    {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
