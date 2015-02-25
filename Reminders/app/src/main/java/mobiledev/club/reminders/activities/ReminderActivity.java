@@ -36,7 +36,7 @@ public class ReminderActivity extends ActionBarActivity {
         descriptionTextView.setText(reminder.getDescription());
 
         Date date = reminder.getDueDate();
-        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        DateFormat dateFormat = DateFormat.getDateTimeInstance();
         String dateString = dateFormat.format(date);
         dateTextView.setText(dateString);
 

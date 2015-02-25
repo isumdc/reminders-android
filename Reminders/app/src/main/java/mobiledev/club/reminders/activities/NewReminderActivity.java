@@ -2,6 +2,7 @@ package mobiledev.club.reminders.activities;
 
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -25,13 +27,17 @@ import mobiledev.club.reminders.sqlite.RemindersDataSource;
 public class NewReminderActivity extends ActionBarActivity {
 
     private static final String datePrefix = "Due Date: ";
+    private static final String timePrefix = "Due Time: ";
 
     private int mYear;
     private int mMonth;
     private int mDay;
+    private int mHour;
+    private int mMinute;
 
     private Date dueDate;
     private DateFormat dateFormat;
+    private DateFormat timeFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +48,15 @@ public class NewReminderActivity extends ActionBarActivity {
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
+        mHour = c.get(Calendar.HOUR_OF_DAY);
+        mMinute = c.get(Calendar.MINUTE);
 
         dueDate = c.getTime();
         dateFormat = SimpleDateFormat.getDateInstance();
+        timeFormat = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
 
         updateDateText();
+        updateTimeText();
 
     }
 
@@ -94,6 +104,9 @@ public class NewReminderActivity extends ActionBarActivity {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar cal = Calendar.getInstance(Locale.US);
                 cal.set(year, monthOfYear, dayOfMonth);
+                mYear = year;
+                mMonth = monthOfYear;
+                mDay = dayOfMonth;
                 dueDate = cal.getTime();
                 NewReminderActivity.this.updateDateText();
             }
@@ -101,10 +114,31 @@ public class NewReminderActivity extends ActionBarActivity {
         dialog.show();
     }
 
+    public void timeButtonOnClick(View view) {
+        TimePickerDialog dialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hour, int minute) {
+                Calendar cal = Calendar.getInstance(Locale.US);
+                cal.set(mYear, mMonth, mDay, hour, minute);
+                mHour = hour;
+                mMinute = minute;
+                dueDate = cal.getTime();
+                NewReminderActivity.this.updateTimeText();
+            }
+        }, mHour, mMinute, false);
+        dialog.show();
+    }
+
     private void updateDateText() {
         String dueDateString = dateFormat.format(dueDate);
         TextView dateTextView = (TextView) findViewById(R.id.textview_date);
         dateTextView.setText(datePrefix + dueDateString);
+    }
+
+    private void updateTimeText() {
+        String dueTimeString = timeFormat.format(dueDate);
+        TextView timeTextView = (TextView) findViewById(R.id.textview_time);
+        timeTextView.setText(timePrefix + dueTimeString);
     }
 
     @Override

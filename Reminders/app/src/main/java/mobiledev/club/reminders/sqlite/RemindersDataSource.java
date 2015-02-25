@@ -41,13 +41,13 @@ public class RemindersDataSource {
         String title = reminder.getTitle();
         String description = reminder.getDescription();
         Date date = reminder.getDueDate();
-        DateFormat dateFormat = SimpleDateFormat.getDateInstance();
+        DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
         String dateString = dateFormat.format(date);
 
         ContentValues values = new ContentValues();
         values.put(ReminderSQLiteHelper.COLUMN_TITLE, title);
         values.put(ReminderSQLiteHelper.COLUMN_DESCRIPTION, description);
-        values.put(ReminderSQLiteHelper.COLUMN_DATE, description);
+        values.put(ReminderSQLiteHelper.COLUMN_DATE, dateString);
         database.insert(ReminderSQLiteHelper.TABLE_REMINDERS, null,
                 values);
         /*
@@ -89,7 +89,7 @@ public class RemindersDataSource {
         reminder.setID(cursor.getLong(0));
         reminder.setTitle(cursor.getString(1));
         reminder.setDescription(cursor.getString(2));
-        DateFormat dateFormat = SimpleDateFormat.getDateInstance();
+        DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
         try{
             reminder.setDueDate(dateFormat.parse(cursor.getString(3)));
         } catch (ParseException e)
