@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="mobiledev.club.reminders" >
 
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -26,6 +29,10 @@
             android:name=".activities.ReminderActivity"
             android:label="@string/title_activity_reminder" >
         </activity>
+
+        <service android:name=".notification.NotifyService" />
+        <service android:name=".notification.ScheduleService" />
+
     </application>
 
 </manifest>

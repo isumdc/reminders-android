@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import mobiledev.club.reminders.R;
 import mobiledev.club.reminders.models.Reminder;
+import mobiledev.club.reminders.notification.ScheduleClient;
 import mobiledev.club.reminders.sqlite.RemindersDataSource;
 
 public class NewReminderActivity extends ActionBarActivity {
@@ -39,10 +40,17 @@ public class NewReminderActivity extends ActionBarActivity {
     private DateFormat dateFormat;
     private DateFormat timeFormat;
 
+    // This is a handle so that we can call methods on our service
+    private ScheduleClient scheduleClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_reminder);
+
+        // Create a new service client and bind our activity to this service
+        scheduleClient = new ScheduleClient(this);
+        scheduleClient.doBindService();
 
         final Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
@@ -66,6 +74,16 @@ public class NewReminderActivity extends ActionBarActivity {
         datasource.open();
         datasource.createReminder(reminder);
         datasource.close();
+
+        long timeInMs = reminder.getDueDate().getTime();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timeInMs);
+
+        //The schedule client handles setting up when the reminder goes off
+        scheduleClient.setAlarmForNotification(reminder.getTitle(), calendar);
+
+        //Makes toast:
+        Toast.makeText(this, "Reminder set for " + SimpleDateFormat.getDateTimeInstance().format(new Date(timeInMs)), Toast.LENGTH_LONG).show();
     }
 
     public void saveButtonOnClick(View view) {
@@ -161,5 +179,17 @@ public class NewReminderActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Overridden so we can unbind the schedule client
+     */
+    @Override
+    protected void onStop() {
+        // When our activity is stopped ensure we also stop the connection to the service
+        //  This stops us leaking our activity into the system
+        if(scheduleClient != null)
+            scheduleClient.doUnbindService();
+        super.onStop();
     }
 }
