@@ -14,14 +14,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:hint="@string/name" />
+        android:hint="@string/name"
+        android:capitalize="words"/>
 
     <EditText
         android:id="@+id/edittext_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/edittext_name"
-        android:hint="@string/description" />
+        android:hint="@string/description"
+        android:capitalize="sentences"/>
 
     <!--DatePicker
         android:id="@+id/datepicker"

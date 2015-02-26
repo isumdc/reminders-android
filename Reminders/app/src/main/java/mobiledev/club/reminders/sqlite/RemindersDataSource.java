@@ -70,6 +70,11 @@ public class RemindersDataSource {
     public ArrayList<Reminder> getReminders() {
         ArrayList<Reminder> reminders = new ArrayList<Reminder>();
 
+        /*
+        String[] dateColumn = new String[1];
+        dateColumn[0] = ReminderSQLiteHelper.COLUMN_DATE;
+ */
+
         Cursor cursor = database.query(ReminderSQLiteHelper.TABLE_REMINDERS,
                 allColumns, null, null, null, null, null);
 

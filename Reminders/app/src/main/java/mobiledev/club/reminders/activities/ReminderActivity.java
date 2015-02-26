@@ -5,15 +5,20 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.Date;
 
 import mobiledev.club.reminders.R;
 import mobiledev.club.reminders.models.Reminder;
+import mobiledev.club.reminders.sqlite.RemindersDataSource;
 
 public class ReminderActivity extends ActionBarActivity {
+
+    private Reminder reminder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +26,7 @@ public class ReminderActivity extends ActionBarActivity {
         setContentView(R.layout.activity_reminder);
 
         Intent intent = getIntent();
-        Reminder reminder = (Reminder) intent.getSerializableExtra("reminder");
+        reminder = (Reminder) intent.getSerializableExtra("reminder");
         if(reminder == null)
         {
             return;
@@ -64,5 +69,15 @@ public class ReminderActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void deleteReminder(View v)
+    {
+        RemindersDataSource datasource = new RemindersDataSource(this);
+        datasource.open();
+        datasource.deleteReminder(reminder);
+        Toast toast = Toast.makeText(this, "Reminder successfully deleted", Toast.LENGTH_SHORT);
+        toast.show();
+        finish();
     }
 }
