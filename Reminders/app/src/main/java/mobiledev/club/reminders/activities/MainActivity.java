@@ -3,16 +3,15 @@ package mobiledev.club.reminders.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import mobiledev.club.reminders.R;
-import mobiledev.club.reminders.adapters.ArrayAdapterNewReminder;
+import mobiledev.club.reminders.adapters.ReminderAdapter;
 import mobiledev.club.reminders.models.Reminder;
 import mobiledev.club.reminders.sqlite.RemindersDataSource;
 
@@ -20,8 +19,12 @@ import mobiledev.club.reminders.sqlite.RemindersDataSource;
 public class MainActivity extends ActionBarActivity {
 
     private static ArrayList<Reminder> reminders;
-    private ListView listView;
-    private static ArrayAdapterNewReminder adapter;
+    //private ListView listView;
+    //private static ReminderAdapter adapter;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,18 +33,19 @@ public class MainActivity extends ActionBarActivity {
 
         loadReminders();
 
-        listView = (ListView)findViewById(R.id.list_view);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Reminder reminder = reminders.get(position);
-                Intent intent = new Intent(MainActivity.this, ReminderActivity.class);
-                intent.putExtra("reminder", reminder);
-                MainActivity.this.startActivity(intent);
-            }
-        });
-        adapter = new ArrayAdapterNewReminder(this, R.layout.item_reminder, reminders);
-        listView.setAdapter(adapter);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView_reminders);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        mAdapter = new ReminderAdapter(reminders);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void loadReminders()
@@ -53,8 +57,6 @@ public class MainActivity extends ActionBarActivity {
         {
             reminders = new ArrayList<Reminder>();
         }
-//        Toast toast = Toast.makeText(this, reminders.size() + "", Toast.LENGTH_SHORT);
-//        toast.show();
     }
 
 
@@ -87,8 +89,8 @@ public class MainActivity extends ActionBarActivity {
     {
         super.onResume();
         loadReminders();
-        adapter.clear();
-        adapter.addAll(reminders);
-        adapter.notifyDataSetChanged();
+        //mAdapter.notifyDataSetChanged();
+        //adapter.addAll(reminders);
+       //adapter.notifyDataSetChanged();
     }
 }
