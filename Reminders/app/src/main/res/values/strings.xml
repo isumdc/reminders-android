@@ -12,5 +12,8 @@
     <string name="reminders_prefs_key">reminders_key</string>
     <string name="title_activity_reminder">ReminderActivity</string>
     <string name="button_delete_text">Delete Reminder</string>
+    <string name="button_save_text">Save</string>
+    <string name="button_cancel_text">Cancel</string>
+    <string name="title_new_reminder">New Reminder</string>
 
 </resources>

@@ -5,6 +5,7 @@
     <color name="theme_darkRed">#E64A19</color>
     <!--item name="android:colorPrimaryLight">#FFCCBC</item-->
     <color name="theme_blue">#03A9F4</color>
+    <color name="theme_darkBlue">#0288D1</color>
 
 \
 </resources>

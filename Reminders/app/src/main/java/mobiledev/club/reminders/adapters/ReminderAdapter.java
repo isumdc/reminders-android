@@ -57,11 +57,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         ReminderAdapter.ReminderViewHolder vh = new ReminderViewHolder(itemView, new ReminderAdapter.ReminderViewHolder.MyViewHolderClickListener(){
             public void expandReminder(View view, int position, LinearLayout expandableLayout)
             {
-                /*
-                Reminder reminder = reminderList.get(position);
-                Intent intent = new Intent(view.getContext(), ReminderActivity.class);
-                intent.putExtra("reminder", reminder);
-                view.getContext().startActivity(intent);*/
                 if(expandableLayout.getVisibility() == View.VISIBLE)
                 {
                     expandableLayout.setVisibility(View.GONE);
@@ -70,8 +65,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                 {
                     expandableLayout.setVisibility(View.VISIBLE);
                 }
-
-
             }
             public void deleteReminder(View view, int position)
             {
@@ -83,7 +76,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                 datasource.deleteReminder(reminder);
                 Toast toast = Toast.makeText(view.getContext(), "Reminder successfully deleted", Toast.LENGTH_SHORT);
                 toast.show();
-               // notifyItemRangeChanged(position, reminderList.size());
             }
         });
         return vh;

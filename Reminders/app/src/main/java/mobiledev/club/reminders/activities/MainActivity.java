@@ -1,22 +1,24 @@
 package mobiledev.club.reminders.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 
 import mobiledev.club.reminders.R;
 import mobiledev.club.reminders.adapters.ReminderAdapter;
+import mobiledev.club.reminders.dialogs.NewReminderDialog;
 import mobiledev.club.reminders.models.Reminder;
 import mobiledev.club.reminders.sqlite.RemindersDataSource;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements NewReminderDialog.NewReminderDialogListener {
 
     private static ArrayList<Reminder> reminders;
     //private ListView listView;
@@ -73,22 +75,39 @@ public class MainActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+/*
         switch(id){
             case R.id.action_new_reminder:
-                Intent intent = new Intent(this, NewReminderActivity.class);
-                startActivity(intent);
+               //Intent intent = new Intent(this, NewReminderActivity.class);
+                //startActivity(intent);
+                FragmentManager fm = MainActivity.this.getSupportFragmentManager();
+                NewReminderDialog newReminderDialog = new NewReminderDialog();
+                newReminderDialog.show(fm, "New Reminder");
                 return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void createReminderOnClick(View v)
+    {
+        FragmentManager fm = MainActivity.this.getSupportFragmentManager();
+        NewReminderDialog newReminderDialog = new NewReminderDialog();
+        newReminderDialog.show(fm, "New Reminder");
+    }
+
+    @Override
+    public void addNewReminder(Reminder reminder)
+    {
+        reminders.add(0, reminder);
+        mAdapter.notifyItemInserted(0);
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        loadReminders();
+        //loadReminders();
         //mAdapter.notifyDataSetChanged();
         //adapter.addAll(reminders);
        //adapter.notifyDataSetChanged();
